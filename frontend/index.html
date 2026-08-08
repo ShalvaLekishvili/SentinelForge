@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SentinelForge — SOC investigation and detection engineering workbench." />
+  <title>SentinelForge — SOC Investigation Workbench</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">SF</div>
+        <div><strong>SentinelForge</strong><span>Investigation Workbench</span></div>
+      </div>
+      <nav>
+        <a class="active" href="#overview">Overview</a>
+        <a href="#detections">Detections</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#iocs">Indicators</a>
+      </nav>
+      <div class="sidebar-foot">v0.1.0 · MVP</div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">SOC INVESTIGATION</p>
+          <h1>Forge telemetry into evidence.</h1>
+          <p class="sub">Analyze structured security logs, surface suspicious behavior, extract IOCs and map findings to MITRE ATT&CK.</p>
+        </div>
+        <div class="status"><span></span> Engine online</div>
+      </header>
+
+      <section class="upload-card" id="overview">
+        <div>
+          <h2>New investigation</h2>
+          <p>Upload JSON, CSV, TXT or LOG telemetry. Use the included sample incident to preview the engine.</p>
+        </div>
+        <div class="actions">
+          <input id="file" type="file" accept=".json,.csv,.txt,.log" />
+          <label for="file" class="button secondary">Choose file</label>
+          <button id="sample" class="button secondary">Load demo</button>
+          <button id="analyze" class="button primary">Analyze</button>
+        </div>
+        <p id="filename" class="filename">No file selected</p>
+      </section>
+
+      <section class="metrics">
+        <article><span>Risk score</span><strong id="risk">—</strong><small id="riskLevel">Awaiting analysis</small></article>
+        <article><span>Events</span><strong id="events">0</strong><small>Normalized telemetry</small></article>
+        <article><span>Detections</span><strong id="detectionCount">0</strong><small>Rule matches</small></article>
+        <article><span>Indicators</span><strong id="iocCount">0</strong><small>Unique observables</small></article>
+      </section>
+
+      <section class="grid-two">
+        <article class="panel" id="detections">
+          <div class="panel-head"><div><p class="eyebrow">FINDINGS</p><h2>Detection queue</h2></div><span id="analysisId" class="tag">No case</span></div>
+          <div id="detectionList" class="empty">Run an analysis to populate findings.</div>
+        </article>
+        <article class="panel" id="iocs">
+          <div class="panel-head"><div><p class="eyebrow">OBSERVABLES</p><h2>IOC extraction</h2></div></div>
+          <div id="iocList" class="empty">No indicators extracted yet.</div>
+        </article>
+      </section>
+
+      <section class="panel" id="timeline">
+        <div class="panel-head"><div><p class="eyebrow">RECONSTRUCTION</p><h2>Investigation timeline</h2></div><span class="tag">Top 100 events</span></div>
+        <div id="timelineList" class="empty">Timeline is waiting for telemetry.</div>
+      </section>
+    </main>
+  </div>
+<script src="/static/app.js"></script>
+</body>
+</html>
