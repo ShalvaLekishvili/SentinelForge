@@ -1,0 +1,16 @@
+id: SF-PERS-003
+title: Windows service creation via sc.exe
+severity: medium
+confidence: medium
+description: sc.exe creates a service, a behavior useful for persistence or execution investigations.
+mitre: [T1543.003]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: regex
+      value: '(^|\\)sc(\.exe)?$'
+    - field: command_line
+      operator: regex
+      value: '\bcreate\b'

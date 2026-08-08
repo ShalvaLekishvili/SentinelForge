@@ -1,0 +1,19 @@
+id: SF-TRANSFER-001
+title: PowerShell remote file transfer pattern
+severity: high
+confidence: medium
+description: PowerShell command line contains common download primitives and an HTTP URL.
+mitre: [T1105, T1059.001]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: powershell
+    - field: command_line
+      operator: regex
+      value: '(Invoke-WebRequest|iwr|WebClient|DownloadFile|Start-BitsTransfer)'
+    - field: command_line
+      operator: regex
+      value: 'https?://'

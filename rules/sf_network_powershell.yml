@@ -1,0 +1,16 @@
+id: SF-NET-001
+title: PowerShell network connection to external destination
+severity: medium
+confidence: medium
+description: A PowerShell process has a destination IP in normalized telemetry.
+mitre: [T1059.001]
+logsource: windows_network_connection
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: powershell
+    - field: destination_ip
+      operator: exists
+      value: true

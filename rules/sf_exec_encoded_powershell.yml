@@ -1,0 +1,16 @@
+id: SF-EXEC-001
+title: Encoded PowerShell execution
+description: PowerShell launched with an encoded-command style argument.
+severity: high
+confidence: high
+mitre: [T1059.001]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: powershell
+    - field: command_line
+      operator: regex
+      value: '(^|\s)-(enc|encodedcommand)\b'

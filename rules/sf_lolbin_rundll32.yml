@@ -1,0 +1,16 @@
+id: SF-LOLBIN-001
+title: Rundll32 proxy execution with external content
+severity: high
+confidence: medium
+description: Rundll32 command line references script execution or a remote URL.
+mitre: [T1218.011]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: rundll32
+    - field: command_line
+      operator: regex
+      value: '(javascript:|https?://|\.sct\b|mshtml)'

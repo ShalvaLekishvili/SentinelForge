@@ -1,0 +1,16 @@
+id: SF-PERS-001
+title: Registry Run Key persistence indicator
+description: Telemetry references a common Windows Run or RunOnce autostart key.
+severity: medium
+confidence: medium
+mitre: [T1547.001]
+logsource: windows_generic
+detection:
+  condition: any
+  clauses:
+    - field: command_line
+      operator: regex
+      value: '\\CurrentVersion\\Run(Once)?\b'
+    - field: command_line
+      operator: contains
+      value: 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'

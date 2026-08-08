@@ -1,0 +1,16 @@
+id: SF-DEF-001
+title: Microsoft Defender real-time monitoring tampering
+severity: high
+confidence: high
+description: PowerShell changes Defender preferences to disable real-time monitoring.
+mitre: [T1562.001]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: command_line
+      operator: contains
+      value: Set-MpPreference
+    - field: command_line
+      operator: regex
+      value: 'DisableRealtimeMonitoring\s+\$?true'

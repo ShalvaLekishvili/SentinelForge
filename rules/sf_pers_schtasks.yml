@@ -1,0 +1,16 @@
+id: SF-PERS-002
+title: Scheduled Task creation
+severity: medium
+confidence: high
+description: schtasks.exe is used to create a scheduled task.
+mitre: [T1053.005]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: schtasks
+    - field: command_line
+      operator: regex
+      value: '(/create|\s-create)\b'

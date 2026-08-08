@@ -1,0 +1,16 @@
+id: SF-CRED-001
+title: Potential LSASS memory access or dump
+severity: critical
+confidence: high
+description: Common tooling or DLL-based methods reference lsass.exe for memory dumping.
+mitre: [T1003.001]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: command_line
+      operator: contains
+      value: lsass
+    - field: command_line
+      operator: regex
+      value: '(procdump|minidump|comsvcs|sekurlsa)'

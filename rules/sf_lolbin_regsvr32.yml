@@ -1,0 +1,16 @@
+id: SF-LOLBIN-002
+title: Regsvr32 remote scriptlet execution
+severity: high
+confidence: high
+description: Regsvr32 references remote content or scrobj.dll style scriptlet execution.
+mitre: [T1218.010]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: regsvr32
+    - field: command_line
+      operator: regex
+      value: '(https?://|scrobj\.dll|/i:)'

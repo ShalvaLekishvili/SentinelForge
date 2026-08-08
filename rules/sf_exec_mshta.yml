@@ -1,0 +1,16 @@
+id: SF-LOLBIN-003
+title: Mshta remote or script execution
+severity: high
+confidence: medium
+description: Mshta is used with a URL or inline script protocol.
+mitre: [T1218.005]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: process
+      operator: contains
+      value: mshta
+    - field: command_line
+      operator: regex
+      value: '(https?://|javascript:|vbscript:)'

@@ -2,75 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="SentinelForge — SOC investigation and detection engineering workbench." />
-  <title>SentinelForge — SOC Investigation Workbench</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="SentinelForge — defensive SOC investigation and detection engineering workbench." />
+  <title>SentinelForge · SOC Investigation Workbench</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
-  <div class="shell">
+  <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">SF</div>
-        <div><strong>SentinelForge</strong><span>Investigation Workbench</span></div>
-      </div>
+      <a class="brand" href="#overview" aria-label="SentinelForge home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28"><path d="M14 2.6 23 6v6.8c0 5.4-3.2 10.1-9 12.6-5.8-2.5-9-7.2-9-12.6V6l9-3.4Z"/><path d="M9.4 14.4 12 17l6.6-6.6"/></svg>
+        </span>
+        <span><strong>SentinelForge</strong><small>Investigation Workbench</small></span>
+      </a>
+
       <nav>
-        <a class="active" href="#overview">Overview</a>
-        <a href="#detections">Detections</a>
-        <a href="#timeline">Timeline</a>
-        <a href="#iocs">Indicators</a>
+        <a class="nav-link active" href="#overview"><span>01</span>Overview</a>
+        <a class="nav-link" href="#detections"><span>02</span>Detection queue</a>
+        <a class="nav-link" href="#timeline"><span>03</span>Timeline</a>
+        <a class="nav-link" href="#processes"><span>04</span>Process graph</a>
+        <a class="nav-link" href="#indicators"><span>05</span>Indicators</a>
+        <a class="nav-link" href="#attack"><span>06</span>ATT&amp;CK coverage</a>
       </nav>
-      <div class="sidebar-foot">v0.1.0 · MVP</div>
+
+      <div class="sidebar-meta">
+        <div><span class="pulse"></span><span id="apiState">API checking</span></div>
+        <p>Defensive analysis only<br/>v<span id="versionLabel">0.2.0</span></p>
+      </div>
     </aside>
 
     <main>
       <header class="topbar">
         <div>
-          <p class="eyebrow">SOC INVESTIGATION</p>
-          <h1>Forge telemetry into evidence.</h1>
-          <p class="sub">Analyze structured security logs, surface suspicious behavior, extract IOCs and map findings to MITRE ATT&CK.</p>
+          <p class="kicker">ANALYST CONSOLE / LOCAL WORKSPACE</p>
+          <h1>Turn raw telemetry into an investigation.</h1>
+          <p class="lede">Normalize endpoint events, evaluate detection-as-code rules, correlate processes, extract indicators, and review ATT&amp;CK coverage in one compact workspace.</p>
         </div>
-        <div class="status"><span></span> Engine online</div>
+        <div class="top-actions">
+          <button class="button ghost" id="loadDemo">Load demo</button>
+          <button class="button ghost" id="exportBtn" disabled>Export JSON</button>
+        </div>
       </header>
 
-      <section class="upload-card" id="overview">
-        <div>
-          <h2>New investigation</h2>
-          <p>Upload JSON, CSV, TXT or LOG telemetry. Use the included sample incident to preview the engine.</p>
+      <section class="ingest-card" id="overview">
+        <div class="ingest-copy">
+          <div class="section-label">INGEST</div>
+          <h2>Analyze security telemetry</h2>
+          <p>Drop a Windows EVTX, JSON, CSV, TXT, or LOG file. Files are processed locally by this SentinelForge instance.</p>
+          <div class="format-row"><span>EVTX</span><span>JSON</span><span>CSV</span><span>TXT</span><span>LOG</span><span>≤ 15 MB</span></div>
         </div>
-        <div class="actions">
-          <input id="file" type="file" accept=".json,.csv,.txt,.log" />
-          <label for="file" class="button secondary">Choose file</label>
-          <button id="sample" class="button secondary">Load demo</button>
-          <button id="analyze" class="button primary">Analyze</button>
-        </div>
-        <p id="filename" class="filename">No file selected</p>
+        <label class="drop-zone" id="dropZone" for="fileInput">
+          <input id="fileInput" type="file" accept=".evtx,.json,.csv,.txt,.log" />
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v3.2A2.3 2.3 0 0 0 7.3 20h9.4a2.3 2.3 0 0 0 2.3-2.3v-3.2"/></svg>
+          <strong id="dropTitle">Choose or drop telemetry</strong>
+          <small id="dropSubtitle">No file selected</small>
+        </label>
+        <button class="button primary analyze-button" id="analyzeBtn" disabled>Run analysis <span>→</span></button>
       </section>
 
-      <section class="metrics">
-        <article><span>Risk score</span><strong id="risk">—</strong><small id="riskLevel">Awaiting analysis</small></article>
-        <article><span>Events</span><strong id="events">0</strong><small>Normalized telemetry</small></article>
-        <article><span>Detections</span><strong id="detectionCount">0</strong><small>Rule matches</small></article>
-        <article><span>Indicators</span><strong id="iocCount">0</strong><small>Unique observables</small></article>
+      <section class="metric-grid" aria-label="Investigation metrics">
+        <article><span>Risk score</span><strong id="riskScore">—</strong><small id="riskLevel">Awaiting telemetry</small></article>
+        <article><span>Normalized events</span><strong id="eventCount">—</strong><small id="parserName">No parser selected</small></article>
+        <article><span>Detections</span><strong id="detectionCount">—</strong><small id="criticalCount">0 critical / 0 high</small></article>
+        <article><span>ATT&amp;CK techniques</span><strong id="techniqueCount">—</strong><small id="ruleCount">Loading rule library…</small></article>
       </section>
 
-      <section class="grid-two">
-        <article class="panel" id="detections">
-          <div class="panel-head"><div><p class="eyebrow">FINDINGS</p><h2>Detection queue</h2></div><span id="analysisId" class="tag">No case</span></div>
-          <div id="detectionList" class="empty">Run an analysis to populate findings.</div>
+      <section class="workspace-grid">
+        <article class="panel span-2" id="detections">
+          <div class="panel-head">
+            <div><span class="section-label">TRIAGE</span><h2>Detection queue</h2></div>
+            <div class="filter-set" id="severityFilters">
+              <button data-severity="all" class="filter active">All</button>
+              <button data-severity="critical" class="filter">Critical</button>
+              <button data-severity="high" class="filter">High</button>
+              <button data-severity="medium" class="filter">Medium</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Severity</th><th>Detection</th><th>Asset / Process</th><th>ATT&amp;CK</th><th>Confidence</th></tr></thead>
+              <tbody id="detectionRows"><tr><td colspan="5" class="empty-cell">Run an analysis to populate the detection queue.</td></tr></tbody>
+            </table>
+          </div>
         </article>
-        <article class="panel" id="iocs">
-          <div class="panel-head"><div><p class="eyebrow">OBSERVABLES</p><h2>IOC extraction</h2></div></div>
-          <div id="iocList" class="empty">No indicators extracted yet.</div>
+
+        <article class="panel" id="attack">
+          <div class="panel-head"><div><span class="section-label">MAPPING</span><h2>ATT&amp;CK coverage</h2></div><span class="micro-badge">TECHNIQUES</span></div>
+          <div id="attackCoverage" class="attack-list empty-block">No mapped techniques yet.</div>
+        </article>
+
+        <article class="panel" id="indicators">
+          <div class="panel-head"><div><span class="section-label">EVIDENCE</span><h2>Indicators</h2></div><span class="micro-badge">IOC</span></div>
+          <div id="iocList" class="ioc-list empty-block">No indicators extracted yet.</div>
+        </article>
+
+        <article class="panel span-2" id="timeline">
+          <div class="panel-head"><div><span class="section-label">SEQUENCE</span><h2>Investigation timeline</h2></div><span class="micro-badge" id="timelineMeta">0 EVENTS</span></div>
+          <div id="timelineList" class="timeline empty-block">Normalized events will appear here.</div>
+        </article>
+
+        <article class="panel span-2" id="processes">
+          <div class="panel-head"><div><span class="section-label">CORRELATION</span><h2>Process graph</h2></div><span class="micro-badge">PID / PPID</span></div>
+          <div id="processTree" class="process-tree empty-block">Process relationships require ProcessId and ParentProcessId telemetry.</div>
         </article>
       </section>
 
-      <section class="panel" id="timeline">
-        <div class="panel-head"><div><p class="eyebrow">RECONSTRUCTION</p><h2>Investigation timeline</h2></div><span class="tag">Top 100 events</span></div>
-        <div id="timelineList" class="empty">Timeline is waiting for telemetry.</div>
-      </section>
+      <footer>
+        <div><strong>SentinelForge</strong><span>Open-source defensive security engineering project.</span></div>
+        <span>Built for reproducible investigation demos — never commit sensitive incident data.</span>
+      </footer>
     </main>
   </div>
-<script src="/static/app.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js"></script>
 </body>
 </html>

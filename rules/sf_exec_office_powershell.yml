@@ -1,0 +1,16 @@
+id: SF-EXEC-002
+title: Office application spawned PowerShell
+description: A Microsoft Office process directly spawned PowerShell.
+severity: high
+confidence: high
+mitre: [T1204.002, T1059.001]
+logsource: windows_process_creation
+detection:
+  condition: all
+  clauses:
+    - field: parent_process
+      operator: regex
+      value: '(winword|excel|powerpnt|outlook)(\.exe)?$'
+    - field: process
+      operator: contains
+      value: powershell

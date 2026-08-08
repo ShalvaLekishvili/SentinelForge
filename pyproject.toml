@@ -1,3 +1,21 @@
+[project]
+name = "sentinelforge"
+version = "0.2.0"
+description = "Defensive SOC investigation and detection engineering workbench"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Shalva Lekishvili" }]
+keywords = ["soc", "dfir", "detection-engineering", "sysmon", "evtx", "mitre-attack", "fastapi"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
